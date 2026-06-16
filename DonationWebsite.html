@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jacobs Bachelor Trip Donations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f5f5f4;
+      --text-primary: #1a1a1a;
+      --text-secondary: #6b6b6b;
+      --text-muted: #a3a3a3;
+      --border: rgba(0,0,0,0.1);
+      --border-strong: rgba(0,0,0,0.2);
+      --success: #22c55e;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-full: 999px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111110;
+        --bg-secondary: #1c1c1b;
+        --text-primary: #f0ede8;
+        --text-secondary: #9c9991;
+        --text-muted: #5a5956;
+        --border: rgba(255,255,255,0.08);
+        --border-strong: rgba(255,255,255,0.18);
+      }
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding-bottom: 2rem;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 1.25rem;
+    }
+
+    .btn-primary {
+      background: var(--text-primary);
+      color: var(--bg);
+      border: none;
+      padding: 9px 24px;
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.8; }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 0.5px solid var(--border-strong);
+      padding: 9px 24px;
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: var(--bg-secondary); }
+
+    /* ── Donate modal ── */
+    .donate-panel {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border);
+    }
+
+    .donate-panel h3 {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .payment-card {
+      padding: 14px 12px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      background: var(--bg);
+    }
+
+    .payment-card .method {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .payment-card .handle {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      word-break: break-all;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .amount-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .chip {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 0.5px solid var(--border-strong);
+      font-size: 13px;
+      cursor: pointer;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: inherit;
+      transition: background 0.1s, color 0.1s;
+    }
+    .chip.active {
+      background: var(--text-primary);
+      color: var(--bg);
+      border-color: var(--text-primary);
+    }
+
+    .field {
+      width: 100%;
+      padding: 9px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text-primary);
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      outline: none;
+      margin-bottom: 8px;
+    }
+    .field:focus { border-color: var(--text-primary); }
+    .field::placeholder { color: var(--text-muted); }
+
+    .record-btn {
+      width: 100%;
+      padding: 10px;
+      background: var(--text-primary);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 4px;
+      transition: opacity 0.15s;
+    }
+    .record-btn:hover { opacity: 0.8; }
+
+    .success-msg {
+      display: none;
+      font-size: 13px;
+      color: var(--success);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ── Goals & Progress ── */
+    .goals-section {
+      padding: 2rem 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.75rem;
+    }
+
+    .goal-card {
+      text-align: center;
+    }
+
+    .goal-card .amount {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .goal-card .label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Progress bar */
+    .progress-wrap { position: relative; }
+
+    .progress-track {
+      height: 12px;
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-full);
+      overflow: visible;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      background: var(--text-primary);
+      transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .milestone-markers {
+      position: relative;
+      height: 32px;
+      margin-top: 8px;
+    }
+
+    .marker {
+      position: absolute;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .marker .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid var(--text-muted);
+      background: var(--bg);
+      margin: 0 auto 4px;
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    .marker.reached .dot {
+      background: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
+    .marker span {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 1rem;
+    }
+
+    .raised-label {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    .raised-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .pct-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ── About ── */
+    .about {
+      padding: 2rem 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .about p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+
+    .about p:last-child { margin-bottom: 0; }
+
+    /* ── Donors ── */
+    .donors {
+      padding: 2rem 0;
+    }
+
+    .donor-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 14px;
+    }
+
+    .donor-row:last-child { border-bottom: none; }
+
+    .donor-name { color: var(--text-primary); font-weight: 500; }
+    .donor-amount { color: var(--text-primary); }
+    .contribute-link {
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .contribute-link:hover { color: var(--text-primary); }
+
+    /* ── New donor row animation ── */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .donor-row.new { animation: slideIn 0.3s ease; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .goals-grid { gap: 6px; }
+      .goal-card .amount { font-size: 20px; }
+      .payment-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Hero -->
+    <div class="hero">
+      <h1>Jacobs Bachelor Trip Donations</h1>
+      <p>Help us make unforgettable memories.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="toggleDonate()">Donate</button>
+        <button class="btn-secondary" onclick="shareIt()">Share</button>
+      </div>
+    </div>
+
+    <!-- Donate panel -->
+    <div id="donate-panel" class="donate-panel">
+      <h3>Choose how to send your donation</h3>
+      <div class="payment-grid">
+        <div class="payment-card">
+          <div class="method">Venmo</div>
+          <div class="handle">@Noah-Hahn-5</div>
+        </div>
+        <div class="payment-card">
+          <div class="method">Zelle</div>
+          <div class="handle">(979)587-0596</div>
+        </div>
+      </div>
+      <p class="hint">After sending, record your donation below to update the progress bar:</p>
+      <div class="amount-chips" id="chips">
+        <button class="chip" onclick="selectAmt(this, 10)">$10</button>
+        <button class="chip" onclick="selectAmt(this, 25)">$25</button>
+        <button class="chip" onclick="selectAmt(this, 50)">$50</button>
+        <button class="chip" onclick="selectAmt(this, 100)">$100</button>
+        <button class="chip" onclick="selectAmt(this, 200)">$200</button>
+      </div>
+      <input class="field" type="number" id="custom-amt" placeholder="Or enter custom amount…" min="1" oninput="clearChips()" />
+      <input class="field" type="text" id="donor-name-input" placeholder="Your name (e.g. Alex M.)" />
+      <button class="record-btn" onclick="recordDonation()">Record my donation</button>
+      <div id="success-msg" class="success-msg">✓ Donation recorded — thank you!</div>
+    </div>
+
+    <!-- Goals & progress -->
+    <div class="goals-section">
+      <div class="goals-grid">
+        <div class="goal-card">
+          <div class="amount">$100</div>
+          <div class="label">1 group pictures sent to the moms</div>
+        </div>
+        <div class="goal-card">
+          <div class="amount">$250</div>
+          <div class="label">A video of us having fun sent to the moms</div>
+        </div>
+        <div class="goal-card">
+          <div class="amount">$500</div>
+          <div class="label">Oldschool campfire skit video</div>
+        </div>
+        <div class="goal-card">
+          <div class="amount">$1000</div>
+          <div class="label">We will recreate the cheese sock video</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="milestone-markers">
+          <!-- Positions: $500 = 10%, $2000 = 40%, $5000 = 100% -->
+          <div class="marker" id="m1" style="left:10%">
+            <div class="dot"></div>
+            <span>$930 - Group picture sent to moms</span>
+          </div>
+          <div class="marker" id="m2" style="left:40%">
+            <div class="dot"></div>
+            <span>$2,000</span>
+          </div>
+          <div class="marker" id="m3" style="left:100%">
+            <div class="dot"></div>
+            <span>$5,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-meta">
+        <div>
+          <span class="raised-label" id="raised-label">$525</span>
+          <span class="raised-sub"> raised</span>
+        </div>
+        <span class="pct-label" id="pct-label">10.5% of $5,000</span>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="about">
+      <div class="section-title">About the trip</div>
+      <p>We're taking Jacob to Kentucky for a whiskey filled cabin stay with mountain views, world-class golf, and tastings at local breweries. This trip brings together old friends and new memories in a premium destination.</p>
+      <p>The itinerary includes exploring scenic trails, a group golf tournament, dedicated time for relaxation, and shared meals featuring the region's cuisine. Every aspect is chosen for fun, comfort, and camaraderie.</p>
+      <p>All donations go directly to trip essentials: securing an amazing cabin, covering golf tournament entries, and providing great food and drinks. Your support means the world — thank you for helping send Noah off in style!</p>
+    </div>
+
+    <!-- Donors -->
+    <div class="donors">
+      <div class="section-title">Donors</div>
+      <div id="donor-list">
+        <div class="donor-row">
+          <span class="donor-name" style="color: var(--text-muted); font-weight: 400;">You?</span>
+          <span class="contribute-link" onclick="toggleDonate()">Contribute!</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const GOAL = 5000;
+    const MILESTONES = [930, 2000, 5000];
+    const MILESTONE_PCT = [18.6, 40, 100]; // positions on bar (%)
+
+    // Set this to your current total raised
+    let raised = 0;
+    let selectedAmt = 0;
+
+    function updateProgress() {
+      const pct = Math.min((raised / GOAL) * 100, 100);
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('raised-label').textContent = '$' + raised.toLocaleString();
+      document.getElementById('pct-label').textContent =
+        ((raised / GOAL) * 100).toFixed(1) + '% of $5,000';
+
+      MILESTONES.forEach((m, i) => {
+        const el = document.getElementById('m' + (i + 1));
+        if (raised >= m) el.classList.add('reached');
+        else el.classList.remove('reached');
+      });
+    }
+
+    function toggleDonate() {
+      const panel = document.getElementById('donate-panel');
+      const open = panel.style.display === 'block';
+      panel.style.display = open ? 'none' : 'block';
+      if (!open) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function selectAmt(el, amt) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      selectedAmt = amt;
+      document.getElementById('custom-amt').value = '';
+    }
+
+    function clearChips() {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      selectedAmt = 0;
+    }
+
+    function recordDonation() {
+      const customVal = document.getElementById('custom-amt').value;
+      const amt = selectedAmt || parseInt(customVal, 10);
+      if (!amt || amt < 1) {
+        alert('Please select or enter a valid amount.');
+        return;
+      }
+
+      const nameInput = document.getElementById('donor-name-input').value.trim();
+      const name = nameInput || 'Anonymous';
+
+      raised += amt;
+      updateProgress();
+
+      // Add to donor list above the "You?" row
+      const list = document.getElementById('donor-list');
+      const lastRow = list.querySelector('.donor-row:last-child');
+      const row = document.createElement('div');
+      row.className = 'donor-row new';
+      row.innerHTML = `<span class="donor-name">${name}</span><span class="donor-amount">$${amt.toLocaleString()}</span>`;
+      list.insertBefore(row, lastRow);
+
+      // Reset form
+      document.getElementById('custom-amt').value = '';
+      document.getElementById('donor-name-input').value = '';
+      clearChips();
+
+      // Show success
+      const msg = document.getElementById('success-msg');
+      msg.style.display = 'block';
+      setTimeout(() => { msg.style.display = 'none'; }, 3500);
+    }
+
+    function shareIt() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Jacobs Bachelor Trip Fundraiser',
+          text: 'Help us make unforgettable memories!',
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href)
+          .then(() => alert('Link copied to clipboard!'))
+          .catch(() => alert('Share this page with your friends!'));
+      }
+    }
+
+    // Init
+    updateProgress();
+  </script>
+</body>
+</html>
