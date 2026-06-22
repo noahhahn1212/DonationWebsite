@@ -530,6 +530,153 @@
       .payment-grid { grid-template-columns: 1fr; }
       .perk-card { align-items: flex-start; }
     }
+
+    /* Admin */
+    .admin-trigger-wrap {
+      text-align: center;
+      padding: 1.5rem 0 0;
+    }
+
+    .admin-trigger {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      opacity: 0.6;
+    }
+    .admin-trigger:hover { opacity: 1; }
+
+    .admin-panel {
+      display: none;
+      margin-top: 1rem;
+      padding: 1.25rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      border: 0.5px dashed var(--border-strong);
+    }
+
+    .admin-panel h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .admin-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    .admin-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .admin-row:last-child { border-bottom: none; }
+
+    .admin-row .admin-name {
+      flex: 1 1 auto;
+      font-size: 13px;
+      background: var(--bg);
+      border: 0.5px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 6px 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+
+    .admin-row .admin-amt {
+      flex: 0 0 80px;
+      font-size: 13px;
+      background: var(--bg);
+      border: 0.5px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 6px 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+
+    .admin-row .admin-del {
+      flex: 0 0 auto;
+      background: none;
+      border: 0.5px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-family: inherit;
+    }
+    .admin-row .admin-del:hover { background: var(--bg); color: #d33; border-color: #d33; }
+
+    .admin-add-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 0.5px solid var(--border-strong);
+    }
+
+    .admin-add-row input {
+      font-size: 13px;
+      background: var(--bg);
+      border: 0.5px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 6px 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+    .admin-add-row .admin-name { flex: 1 1 auto; }
+    .admin-add-row .admin-amt { flex: 0 0 80px; }
+
+    .admin-add-btn {
+      flex: 0 0 auto;
+      background: var(--text-primary);
+      color: var(--bg);
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .admin-save-bar {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .admin-save-btn {
+      flex: 1;
+      padding: 9px;
+      background: var(--text-primary);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .admin-lock-btn {
+      padding: 9px 14px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+    }
   </style>
 </head>
 <body>
@@ -659,11 +806,25 @@
     <!-- Donors -->
     <div class="donors">
       <div class="section-title">Donors</div>
-      <div id="donor-list">
-        <div class="donor-row">
-          <span class="donor-name" style="color: var(--text-muted); font-weight: 400;">You?</span>
-          <span class="contribute-link" onclick="toggleDonate()">Contribute!</span>
-        </div>
+      <div id="donor-list"></div>
+    </div>
+
+    <!-- Admin -->
+    <div class="admin-trigger-wrap">
+      <button class="admin-trigger" onclick="unlockAdmin()">Edit donations</button>
+    </div>
+    <div id="admin-panel" class="admin-panel">
+      <h3>Edit donations</h3>
+      <p class="admin-sub">Fix amounts, fix names, or remove an entry. Changes apply when you hit Save.</p>
+      <div id="admin-rows"></div>
+      <div class="admin-add-row">
+        <input class="admin-name" id="admin-new-name" type="text" placeholder="Name" />
+        <input class="admin-amt" id="admin-new-amt" type="number" placeholder="$" />
+        <button class="admin-add-btn" onclick="adminAddRow()">Add</button>
+      </div>
+      <div class="admin-save-bar">
+        <button class="admin-save-btn" onclick="adminSave()">Save changes</button>
+        <button class="admin-lock-btn" onclick="lockAdmin()">Close</button>
       </div>
     </div>
 
@@ -685,10 +846,61 @@
     ];
     const GOAL = MILESTONES[MILESTONES.length - 1].amt;
 
-    // Set this to current total raised (individual perk $ counts toward this too)
-    let raised = 0;
+    // Your Google Apps Script Web App URL — this is the "API" that reads
+    // from and writes to the Google Sheet acting as the shared database.
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyTyJWY3roO5tz2aYD4_8xyDxvY1SjNfAR66O5Ru2lEM5dsK6gyMPbNLNaKiej6tX9M/exec';
+
+    // How often (in ms) the page quietly re-checks the Sheet for new
+    // donations from other visitors. 20s is plenty responsive without
+    // hammering the Apps Script quota.
+    const REFRESH_INTERVAL_MS = 20000;
+
+    // Change this to whatever passcode you want to gate edits behind.
+    // This is a basic deterrent only, not real security — anyone who views
+    // the page source can find it. Good enough to stop accidental edits.
+    const ADMIN_PASSCODE = 'jacob2026';
+
+    // Every donation lives here. raised is always derived from this array,
+    // never incremented directly, so edits/deletes always stay in sync.
+    // This is now a local cache of whatever's in the Google Sheet —
+    // fetchDonations() keeps it up to date.
+    let donations = [];
     let selectedAmt = 0;
     let selectedPerkLabel = null;
+    let adminUnlocked = false;
+    let adminDraft = null; // working copy while the admin panel is open; only written back on Save
+
+    function getRaised() {
+      return donations.reduce((sum, d) => sum + d.amt, 0);
+    }
+
+    /**
+     * Pulls the latest donation list from the Google Sheet and re-renders.
+     * Called on page load, on a timer, and right after a successful donation.
+     */
+    async function fetchDonations() {
+      // Don't refresh out from under an in-progress admin edit.
+      if (adminDraft !== null) return;
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        donations = (data.donations || []).map(d => ({
+          name: d.name,
+          amt: d.amt,
+          perk: d.perk || null,
+          timestamp: d.timestamp || null
+        }));
+        // Most recent donation first.
+        donations.sort((a, b) => {
+          if (!a.timestamp) return 1;
+          if (!b.timestamp) return -1;
+          return new Date(b.timestamp) - new Date(a.timestamp);
+        });
+        renderAll();
+      } catch (err) {
+        console.error('Failed to load donations from the Sheet:', err);
+      }
+    }
 
     function buildMarkers() {
       const wrap = document.getElementById('milestone-markers');
@@ -709,6 +921,7 @@
     }
 
     function updateProgress() {
+      const raised = getRaised();
       const pct = Math.min((raised / GOAL) * 100, 100);
       document.getElementById('progress-fill').style.width = pct + '%';
       document.getElementById('raised-label').textContent = '$' + raised.toLocaleString();
@@ -726,6 +939,28 @@
           row.classList.remove('reached');
         }
       });
+    }
+
+    function renderDonorList() {
+      const list = document.getElementById('donor-list');
+      list.innerHTML = '';
+      donations.forEach(d => {
+        const row = document.createElement('div');
+        row.className = 'donor-row';
+        const perkTag = d.perk ? ` <span style="color:var(--text-muted); font-size:12px;">(${d.perk})</span>` : '';
+        row.innerHTML = `<span class="donor-name">${d.name}${perkTag}</span><span class="donor-amount">$${d.amt.toLocaleString()}</span>`;
+        list.appendChild(row);
+      });
+      const youRow = document.createElement('div');
+      youRow.className = 'donor-row';
+      youRow.innerHTML = `<span class="donor-name" style="color: var(--text-muted); font-weight: 400;">You?</span><span class="contribute-link" onclick="toggleDonate()">Contribute!</span>`;
+      list.appendChild(youRow);
+    }
+
+    function renderAll() {
+      renderDonorList();
+      updateProgress();
+      if (adminUnlocked && adminDraft) renderAdminRows();
     }
 
     function toggleDonate() {
@@ -769,7 +1004,7 @@
       selectedPerkLabel = null;
     }
 
-    function recordDonation() {
+    async function recordDonation() {
       const customVal = document.getElementById('custom-amt').value;
       const amt = selectedAmt || parseInt(customVal, 10);
       if (!amt || amt < 1) {
@@ -779,47 +1014,166 @@
 
       const nameInput = document.getElementById('donor-name-input').value.trim();
       const name = nameInput || 'Anonymous';
+      const perk = selectedPerkLabel;
 
-      raised += amt;
-      updateProgress();
+      const recordBtn = document.querySelector('.record-btn');
+      recordBtn.disabled = true;
+      recordBtn.textContent = 'Recording…';
 
-      // Add to donor list above the "You?" row
-      const list = document.getElementById('donor-list');
-      const lastRow = list.querySelector('.donor-row:last-child');
-      const row = document.createElement('div');
-      row.className = 'donor-row new';
-      const perkTag = selectedPerkLabel ? ` <span style="color:var(--text-muted); font-size:12px;">(${selectedPerkLabel})</span>` : '';
-      row.innerHTML = `<span class="donor-name">${name}${perkTag}</span><span class="donor-amount">$${amt.toLocaleString()}</span>`;
-      list.insertBefore(row, lastRow);
+      // Optimistic update: show it locally right away so the donor gets
+      // instant feedback, rather than waiting on the round trip to Google.
+      donations.unshift({ name, amt, perk, timestamp: new Date().toISOString() });
+      renderAll();
+
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' }, // avoids a CORS preflight to Apps Script
+          body: JSON.stringify({ action: 'add', name, amt, perk })
+        });
+      } catch (err) {
+        console.error('Failed to save donation to the Sheet:', err);
+      }
 
       // Reset form
       document.getElementById('custom-amt').value = '';
       document.getElementById('donor-name-input').value = '';
       clearChips();
+      recordBtn.disabled = false;
+      recordBtn.textContent = 'Record my donation';
 
       // Show success
       const msg = document.getElementById('success-msg');
       msg.style.display = 'block';
       setTimeout(() => { msg.style.display = 'none'; }, 3500);
+
+      // Re-sync with the Sheet shortly after, so we pick up the real
+      // timestamp and anything else that changed in the meantime.
+      setTimeout(fetchDonations, 2000);
     }
 
     function shareIt() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Jacobs Bachelor Trip Fundraiser',
-          text: 'Help us make unforgettable memories!',
-          url: window.location.href
-        });
-      } else {
-        navigator.clipboard.writeText(window.location.href)
-          .then(() => alert('Link copied to clipboard!'))
-          .catch(() => alert('Share this page with your friends!'));
+      const SITE_URL = 'https://noahhahn.com';
+      navigator.clipboard.writeText(SITE_URL)
+        .then(() => {
+          const btn = document.querySelector('.btn-secondary');
+          const original = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = original; }, 1800);
+        })
+        .catch(() => alert('Copy this link to share: ' + SITE_URL));
+    }
+
+    /* ── Admin ── */
+
+    async function unlockAdmin() {
+      if (adminUnlocked) {
+        await fetchDonations(); // adminDraft is null right now, so this is allowed through
+        adminDraft = donations.map(d => ({ ...d }));
+        document.getElementById('admin-panel').style.display = 'block';
+        renderAdminRows();
+        return;
       }
+      const code = prompt('Enter passcode to edit donations:');
+      if (code === null) return;
+      if (code === ADMIN_PASSCODE) {
+        adminUnlocked = true;
+        await fetchDonations();
+        adminDraft = donations.map(d => ({ ...d }));
+        document.getElementById('admin-panel').style.display = 'block';
+        renderAdminRows();
+        document.getElementById('admin-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        alert('Incorrect passcode.');
+      }
+    }
+
+    function lockAdmin() {
+      // Discard the draft — anything typed/deleted since opening is dropped.
+      adminDraft = null;
+      document.getElementById('admin-panel').style.display = 'none';
+    }
+
+    function renderAdminRows() {
+      const wrap = document.getElementById('admin-rows');
+      wrap.innerHTML = '';
+      adminDraft.forEach((d, i) => {
+        const row = document.createElement('div');
+        row.className = 'admin-row';
+        row.innerHTML = `
+          <input class="admin-name" value="${d.name.replace(/"/g, '&quot;')}" oninput="adminDraft[${i}].name = this.value" />
+          <input class="admin-amt" type="number" value="${d.amt}" oninput="adminEditAmt(${i}, this.value)" />
+          <button class="admin-del" onclick="adminDeleteRow(${i})">Delete</button>
+        `;
+        wrap.appendChild(row);
+      });
+      if (adminDraft.length === 0) {
+        wrap.innerHTML = '<p style="font-size:12px;color:var(--text-muted);padding:8px 0;">No donations recorded yet.</p>';
+      }
+    }
+
+    function adminEditAmt(index, value) {
+      const entry = adminDraft[index];
+      entry.amt = parseInt(value, 10) || 0;
+      // The amount no longer matches whatever perk this row was tied to
+      // (e.g. it said "$250 — whiskey" and got changed to $50), so drop
+      // the now-stale perk label rather than show a mismatched tag.
+      entry.perk = null;
+    }
+
+    function adminDeleteRow(index) {
+      adminDraft.splice(index, 1);
+      renderAdminRows();
+    }
+
+    function adminAddRow() {
+      const nameEl = document.getElementById('admin-new-name');
+      const amtEl = document.getElementById('admin-new-amt');
+      const name = nameEl.value.trim() || 'Anonymous';
+      const amt = parseInt(amtEl.value, 10);
+      if (!amt || amt < 1) {
+        alert('Enter a valid amount.');
+        return;
+      }
+      adminDraft.push({ name, amt, perk: null });
+      nameEl.value = '';
+      amtEl.value = '';
+      renderAdminRows();
+    }
+
+    async function adminSave() {
+      const saveBtn = document.querySelector('.admin-save-btn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving…';
+
+      // Commit the draft locally first so the UI feels instant.
+      donations = adminDraft.map(d => ({ ...d }));
+      adminDraft = null;
+      document.getElementById('admin-panel').style.display = 'none';
+      renderAll();
+
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'replaceAll', donations })
+        });
+      } catch (err) {
+        console.error('Failed to save admin changes to the Sheet:', err);
+        alert('Changes were applied locally but may not have saved to the Sheet — check your connection and try again.');
+      }
+
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save changes';
+
+      // Re-sync shortly after to confirm what actually landed in the Sheet.
+      setTimeout(fetchDonations, 2000);
     }
 
     // Init
     buildMarkers();
-    updateProgress();
+    fetchDonations();
+    setInterval(fetchDonations, REFRESH_INTERVAL_MS);
   </script>
 </body>
 </html>
