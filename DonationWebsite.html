@@ -49,7 +49,7 @@
       padding: 2.5rem 1.5rem 4rem;
     }
 
-    /* ── Hero ── */
+    /* Hero */
     .hero {
       text-align: center;
       padding-bottom: 2rem;
@@ -104,7 +104,7 @@
     }
     .btn-secondary:hover { background: var(--bg-secondary); }
 
-    /* ── Donate modal ── */
+    /* Donate modal */
     .donate-panel {
       display: none;
       margin-top: 1.5rem;
@@ -216,7 +216,7 @@
       margin-top: 8px;
     }
 
-    /* ── Goals & Progress ── */
+    /* Goals & Progress */
     .goals-section {
       padding: 2rem 0;
       border-bottom: 0.5px solid var(--border);
@@ -366,7 +366,7 @@
       color: var(--text-secondary);
     }
 
-    /* ── About ── */
+    /* About */
     .about {
       padding: 2rem 0;
       border-bottom: 0.5px solid var(--border);
@@ -390,7 +390,7 @@
 
     .about p:last-child { margin-bottom: 0; }
 
-    /* ── Donors ── */
+    /* Donors */
     .donors {
       padding: 2rem 0;
     }
@@ -417,14 +417,14 @@
     }
     .contribute-link:hover { color: var(--text-primary); }
 
-    /* ── New donor row animation ── */
+    /* New donor row animation */
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(-6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     .donor-row.new { animation: slideIn 0.3s ease; }
 
-    /* ── Individual perks ── */
+    /* Individual perks */
     .perks {
       padding: 2rem 0;
       border-bottom: 0.5px solid var(--border);
@@ -524,7 +524,7 @@
       background: var(--border-strong);
     }
 
-    /* ── Responsive ── */
+    /* Responsive */
     @media (max-width: 480px) {
       .goal-row .amount { min-width: 48px; font-size: 14px; }
       .payment-grid { grid-template-columns: 1fr; }
@@ -677,7 +677,7 @@
     ];
     const GOAL = MILESTONES[MILESTONES.length - 1].amt;
 
-    // Set this to your current total raised (individual perk $ counts toward this too)
+    // Set this to current total raised (individual perk $ counts toward this too)
     let raised = 0;
     let selectedAmt = 0;
     let selectedPerkLabel = null;
