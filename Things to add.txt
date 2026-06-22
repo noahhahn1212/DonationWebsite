@@ -25,16 +25,9 @@ Add in a shop?
 
 
 Things to fix/update:
-Share Button:
-    - Make it so when clicked it copies the website url to their clipboard
-
 Group Milestones:
     - How am i going to add a gif for the Jockey Jig (maybe link? Maybe a hover over popup?)
 
 About the trip:
     - Complete the about the trip section
     - Maybe move it?
-
-Donors:
-    - Make it so it shows most recent donator -> oldest donator
-    
