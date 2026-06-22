@@ -846,24 +846,17 @@
     ];
     const GOAL = MILESTONES[MILESTONES.length - 1].amt;
 
-    // Your Google Apps Script Web App URL — this is the "API" that reads
-    // from and writes to the Google Sheet acting as the shared database.
+    // Google Apps Script Web App URL, this is the "API" that reads from and writes to the Google Sheet acting as the shared database.
     const API_URL = 'https://script.google.com/macros/s/AKfycbyTyJWY3roO5tz2aYD4_8xyDxvY1SjNfAR66O5Ru2lEM5dsK6gyMPbNLNaKiej6tX9M/exec';
 
-    // How often (in ms) the page quietly re-checks the Sheet for new
-    // donations from other visitors. 20s is plenty responsive without
-    // hammering the Apps Script quota.
+    // How often (in ms) the page quietly re-checks the Sheet for new donations from other visitors. 20s atm
     const REFRESH_INTERVAL_MS = 20000;
 
-    // Change this to whatever passcode you want to gate edits behind.
-    // This is a basic deterrent only, not real security — anyone who views
-    // the page source can find it. Good enough to stop accidental edits.
-    const ADMIN_PASSCODE = 'jacob2026';
+    // This is to edito donations, a basic deterrent only, not real security anyone who views the page source can find it
+    const ADMIN_PASSCODE = '123abc123';
 
-    // Every donation lives here. raised is always derived from this array,
-    // never incremented directly, so edits/deletes always stay in sync.
-    // This is now a local cache of whatever's in the Google Sheet —
-    // fetchDonations() keeps it up to date.
+    // Every donation lives here. raised is always derived from this array, never incremented directly, so edits/deletes always stay in sync.
+    // This is now a local cache of whatever's in the Google Sheet fetchDonations() keeps it up to date.
     let donations = [];
     let selectedAmt = 0;
     let selectedPerkLabel = null;
@@ -874,10 +867,7 @@
       return donations.reduce((sum, d) => sum + d.amt, 0);
     }
 
-    /**
-     * Pulls the latest donation list from the Google Sheet and re-renders.
-     * Called on page load, on a timer, and right after a successful donation.
-     */
+    // Pulls the latest donation list from the Google Sheet and re-renders. Called on page load, on a timer, and right after a successful donation.
     async function fetchDonations() {
       // Don't refresh out from under an in-progress admin edit.
       if (adminDraft !== null) return;
@@ -906,8 +896,7 @@
       const wrap = document.getElementById('milestone-markers');
       wrap.innerHTML = '';
       MILESTONES.forEach((m, i) => {
-        // True dollar-proportional position on the bar, inset slightly
-        // so the dot's own radius never pokes outside the track's rounded ends.
+        // True dollar-proportional position on the bar, inset slightly so the dot's own radius never pokes outside the track's rounded ends.
         const rawPct = (m.amt / GOAL) * 100;
         const pct = Math.min(Math.max(rawPct, 1.5), 98.5);
         const isBelow = i % 2 === 1;
@@ -1020,8 +1009,7 @@
       recordBtn.disabled = true;
       recordBtn.textContent = 'Recording…';
 
-      // Optimistic update: show it locally right away so the donor gets
-      // instant feedback, rather than waiting on the round trip to Google.
+      // Optimistic update: show it locally right away so the donor gets instant feedback, rather than waiting on the round trip to Google.
       donations.unshift({ name, amt, perk, timestamp: new Date().toISOString() });
       renderAll();
 
@@ -1047,8 +1035,7 @@
       msg.style.display = 'block';
       setTimeout(() => { msg.style.display = 'none'; }, 3500);
 
-      // Re-sync with the Sheet shortly after, so we pick up the real
-      // timestamp and anything else that changed in the meantime.
+      // Re-sync with the Sheet shortly after, so we pick up the real timestamp and anything else that changed in the meantime.
       setTimeout(fetchDonations, 2000);
     }
 
@@ -1064,8 +1051,7 @@
         .catch(() => alert('Copy this link to share: ' + SITE_URL));
     }
 
-    /* ── Admin ── */
-
+    /* Admin */
     async function unlockAdmin() {
       if (adminUnlocked) {
         await fetchDonations(); // adminDraft is null right now, so this is allowed through
@@ -1115,9 +1101,7 @@
     function adminEditAmt(index, value) {
       const entry = adminDraft[index];
       entry.amt = parseInt(value, 10) || 0;
-      // The amount no longer matches whatever perk this row was tied to
-      // (e.g. it said "$250 — whiskey" and got changed to $50), so drop
-      // the now-stale perk label rather than show a mismatched tag.
+      // The amount no longer matches whatever perk this row was tied to (e.g. it said "$250 — whiskey" and got changed to $50), so drop the now-stale perk label rather than show a mismatched tag.
       entry.perk = null;
     }
 
