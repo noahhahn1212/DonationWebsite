@@ -24,3 +24,17 @@ Group distillery tour and we will bring you back a bottle - $200
 Add in a shop?
 
 
+Things to fix/update:
+Donate:
+    - Would it be easier to track the amount of donation via paypal or just keep the manual donation tracker
+
+Share Button:
+    - Make it so when clicked it copies the website url to their clipboard
+
+Group Milestones:
+    - How am i going to add a gif for the Jockey Jig (maybe link? Maybe a hover over popup?)
+
+About the trip:
+    - Complete the about the trip section
+    - Maybe move it?
+

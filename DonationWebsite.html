@@ -18,7 +18,7 @@
       --text-muted: #a3a3a3;
       --border: rgba(0,0,0,0.1);
       --border-strong: rgba(0,0,0,0.2);
-      --success: #22c55e;
+      --success: #7ac495;
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-full: 999px;
@@ -27,12 +27,12 @@
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #111110;
-        --bg-secondary: #1c1c1b;
+        --bg-secondary: #232321;
         --text-primary: #f0ede8;
         --text-secondary: #9c9991;
-        --text-muted: #5a5956;
-        --border: rgba(255,255,255,0.08);
-        --border-strong: rgba(255,255,255,0.18);
+        --text-muted: #6b6964;
+        --border: rgba(255,255,255,0.1);
+        --border-strong: rgba(255,255,255,0.28);
       }
     }
 
@@ -222,41 +222,64 @@
       border-bottom: 0.5px solid var(--border);
     }
 
-    .goals-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+    .goals-list {
+      display: flex;
+      flex-direction: column;
       margin-bottom: 1.75rem;
     }
 
-    .goal-card {
-      text-align: center;
+    .goal-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 0.5px solid var(--border);
+      transition: opacity 0.4s;
     }
 
-    .goal-card .amount {
-      font-size: clamp(22px, 4vw, 30px);
+    .goal-row:last-child { border-bottom: none; }
+
+    .goal-row .amount {
+      flex: 0 0 auto;
+      min-width: 56px;
+      font-size: 15px;
       font-weight: 600;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.2px;
+      color: var(--text-muted);
+      transition: color 0.4s;
     }
 
-    .goal-card .label {
-      font-size: 11px;
-      color: var(--text-secondary);
-      margin-top: 3px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+    .goal-row .label {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      transition: color 0.4s;
+    }
+
+    .goal-row.reached .amount,
+    .goal-row.reached .label {
+      color: var(--text-primary);
+    }
+
+    .goal-row.reached .amount::after {
+      content: " ✓";
+      color: var(--success);
     }
 
     /* Progress bar */
-    .progress-wrap { position: relative; }
+    .progress-wrap {
+      position: relative;
+      padding: 26px 0;
+    }
 
     .progress-track {
       height: 12px;
       background: var(--bg-secondary);
-      border: 0.5px solid var(--border);
+      border: 1px solid var(--border-strong);
       border-radius: var(--radius-full);
       overflow: visible;
       position: relative;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
     }
 
     .progress-fill {
@@ -268,43 +291,63 @@
     }
 
     .milestone-markers {
-      position: relative;
-      height: 32px;
-      margin-top: 8px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 26px;
+      height: 12px;
     }
 
     .marker {
       position: absolute;
+      top: 0;
+      height: 12px;
       transform: translateX(-50%);
       text-align: center;
     }
 
     .marker .dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 8px;
       height: 8px;
       border-radius: 50%;
       border: 1.5px solid var(--text-muted);
       background: var(--bg);
-      margin: 0 auto 4px;
+      transform: translate(-50%, -50%);
       transition: background 0.4s, border-color 0.4s;
+      z-index: 2;
     }
 
-    .marker.reached .dot {
-      background: var(--text-primary);
-      border-color: var(--text-primary);
-    }
-
-    .marker span {
+    .marker .label-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
       font-size: 10px;
       color: var(--text-muted);
       white-space: nowrap;
+    }
+
+    .marker.above .label-text {
+      transform: translate(-50%, -150%);
+    }
+
+    .marker.below .label-text {
+      transform: translate(-50%, 50%);
+    }
+
+    .marker.reached .dot {
+      background: var(--success);
+      border-color: var(--bg);
+      box-shadow: 0 0 0 1.5px var(--success);
     }
 
     .progress-meta {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-top: 1rem;
+      margin-top: 0.25rem;
     }
 
     .raised-label {
@@ -381,11 +424,111 @@
     }
     .donor-row.new { animation: slideIn 0.3s ease; }
 
+    /* ── Individual perks ── */
+    .perks {
+      padding: 2rem 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .perks-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .perk-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .perk-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: var(--bg-secondary);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .perk-card:hover {
+      background: var(--bg);
+      border-color: var(--text-primary);
+    }
+
+    .perk-card .perk-text {
+      flex: 1 1 auto;
+      font-size: 13px;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    .perk-card .perk-price {
+      flex: 0 0 64px;
+      text-align: right;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Perk picker inside donate panel */
+    .perk-picker {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .perk-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .perk-option .perk-option-text { flex: 1; }
+    .perk-option .perk-option-price { font-weight: 600; white-space: nowrap; }
+
+    .perk-option.active {
+      background: var(--text-primary);
+      color: var(--bg);
+      border-color: var(--text-primary);
+    }
+
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .or-divider::before,
+    .or-divider::after {
+      content: "";
+      flex: 1;
+      height: 0.5px;
+      background: var(--border-strong);
+    }
+
     /* ── Responsive ── */
     @media (max-width: 480px) {
-      .goals-grid { gap: 6px; }
-      .goal-card .amount { font-size: 20px; }
+      .goal-row .amount { min-width: 48px; font-size: 14px; }
       .payment-grid { grid-template-columns: 1fr; }
+      .perk-card { align-items: flex-start; }
     }
   </style>
 </head>
@@ -416,7 +559,25 @@
         </div>
       </div>
       <p class="hint">After sending, record your donation below to update the progress bar:</p>
-      <div class="amount-chips" id="chips">
+
+      <div class="perk-picker" id="perk-picker">
+        <div class="perk-option" onclick="selectPerk(this, 100, 'Bring back a bottle of whiskey')">
+          <span class="perk-option-text">Bring back a bottle of whiskey</span>
+          <span class="perk-option-price">$100</span>
+        </div>
+        <div class="perk-option" onclick="selectPerk(this, 200, 'Distillery tour + bottle brought back')">
+          <span class="perk-option-text">Group distillery tour + we'll bring you back a bottle</span>
+          <span class="perk-option-price">$200</span>
+        </div>
+        <div class="perk-option" onclick="selectPerk(this, 500, 'Poker buy-in (Shark Attack)')">
+          <span class="perk-option-text">Buy in for a game of poker with Jacob (Shark Attack)</span>
+          <span class="perk-option-price">$500</span>
+        </div>
+      </div>
+
+      <div class="or-divider">or pick an amount</div>
+
+      <div class="amount-chips">
         <button class="chip" onclick="selectAmt(this, 10)">$10</button>
         <button class="chip" onclick="selectAmt(this, 25)">$25</button>
         <button class="chip" onclick="selectAmt(this, 50)">$50</button>
@@ -431,52 +592,53 @@
 
     <!-- Goals & progress -->
     <div class="goals-section">
-      <div class="goals-grid">
-        <div class="goal-card">
-          <div class="amount">$100</div>
-          <div class="label">1 group pictures sent to the moms</div>
-        </div>
-        <div class="goal-card">
-          <div class="amount">$250</div>
-          <div class="label">A video of us having fun sent to the moms</div>
-        </div>
-        <div class="goal-card">
-          <div class="amount">$500</div>
-          <div class="label">Oldschool campfire skit video</div>
-        </div>
-        <div class="goal-card">
-          <div class="amount">$1000</div>
-          <div class="label">We will recreate the cheese sock video</div>
-        </div>
+      <div class="section-title">Group milestones</div>
+      <div class="goals-list">
+        <div class="goal-row" data-amt="50"><span class="amount">$50</span><span class="label">Group pictures sent to mom</span></div>
+        <div class="goal-row" data-amt="100"><span class="amount">$100</span><span class="label">Jacob's application to the Navy doesn't get submitted</span></div>
+        <div class="goal-row" data-amt="250"><span class="amount">$250</span><span class="label">A video of us having fun</span></div>
+        <div class="goal-row" data-amt="400"><span class="amount">$400</span><span class="label">Old-school campfire skit</span></div>
+        <div class="goal-row" data-amt="750"><span class="amount">$750</span><span class="label">Jockey jig at the horse track</span></div>
+        <div class="goal-row" data-amt="930"><span class="amount">$930</span><span class="label">Airbnb paid off</span></div>
+        <div class="goal-row" data-amt="1500"><span class="amount">$1,500</span><span class="label">Cement Mixer — chug half a gallon of milk + 3 shots (top 3 donors each pick a participant)</span></div>
+        <div class="goal-row" data-amt="2000"><span class="amount">$2,000</span><span class="label">We recreate the cheese sock video</span></div>
+        <div class="goal-row" data-amt="3000"><span class="amount">$3,000</span><span class="label">A random groomsman becomes Lady Luck — wears a dress at the casino (flights paid for)</span></div>
+        <div class="goal-row" data-amt="4000"><span class="amount">$4,000</span><span class="label">Someone hits an open mic comedy show — Airbnb &amp; flights paid for</span></div>
       </div>
 
       <div class="progress-wrap">
         <div class="progress-track">
           <div class="progress-fill" id="progress-fill"></div>
         </div>
-        <div class="milestone-markers">
-          <!-- Positions: $500 = 10%, $2000 = 40%, $5000 = 100% -->
-          <div class="marker" id="m1" style="left:10%">
-            <div class="dot"></div>
-            <span>$930 - Group picture sent to moms</span>
-          </div>
-          <div class="marker" id="m2" style="left:40%">
-            <div class="dot"></div>
-            <span>$2,000</span>
-          </div>
-          <div class="marker" id="m3" style="left:100%">
-            <div class="dot"></div>
-            <span>$5,000</span>
-          </div>
-        </div>
+        <div class="milestone-markers" id="milestone-markers"></div>
       </div>
 
       <div class="progress-meta">
         <div>
-          <span class="raised-label" id="raised-label">$525</span>
+          <span class="raised-label" id="raised-label">$0</span>
           <span class="raised-sub"> raised</span>
         </div>
-        <span class="pct-label" id="pct-label">10.5% of $5,000</span>
+        <span class="pct-label" id="pct-label">0% of $4,000</span>
+      </div>
+    </div>
+
+    <!-- Individual perks -->
+    <div class="perks">
+      <div class="section-title">Individual donation perks</div>
+      <p class="perks-sub">Want something just for you? Tap a perk to send it.</p>
+      <div class="perk-cards">
+        <div class="perk-card" onclick="pickPerkFromTeaser(0)">
+          <span class="perk-text">Bring back a bottle of whiskey</span>
+          <span class="perk-price">$100</span>
+        </div>
+        <div class="perk-card" onclick="pickPerkFromTeaser(1)">
+          <span class="perk-text">Group distillery tour + we'll bring you back a bottle</span>
+          <span class="perk-price">$200</span>
+        </div>
+        <div class="perk-card" onclick="pickPerkFromTeaser(2)">
+          <span class="perk-text">Buy in for a game of poker with Jacob (Shark Attack)</span>
+          <span class="perk-price">$500</span>
+        </div>
       </div>
     </div>
 
@@ -500,25 +662,61 @@
   </div>
 
   <script>
-    const GOAL = 5000;
-    const MILESTONES = [930, 2000, 5000];
-    const MILESTONE_PCT = [18.6, 40, 100]; // positions on bar (%)
+    // Group milestones: [amount, label] — last one is the top of the bar
+    const MILESTONES = [
+      { amt: 50,   label: 'Group pictures sent to mom' },
+      { amt: 100,  label: "Jacob's Navy application doesn't get submitted" },
+      { amt: 250,  label: 'Video of us having fun' },
+      { amt: 400,  label: 'Old-school campfire skit' },
+      { amt: 750,  label: 'Jockey jig at the horse track' },
+      { amt: 930,  label: 'Airbnb paid off' },
+      { amt: 1500, label: 'Cement Mixer' },
+      { amt: 2000, label: 'Cheese sock video recreation' },
+      { amt: 3000, label: 'Lady Luck at the casino' },
+      { amt: 4000, label: 'Open mic comedy show' }
+    ];
+    const GOAL = MILESTONES[MILESTONES.length - 1].amt;
 
-    // Set this to your current total raised
+    // Set this to your current total raised (individual perk $ counts toward this too)
     let raised = 0;
     let selectedAmt = 0;
+    let selectedPerkLabel = null;
+
+    function buildMarkers() {
+      const wrap = document.getElementById('milestone-markers');
+      wrap.innerHTML = '';
+      MILESTONES.forEach((m, i) => {
+        // True dollar-proportional position on the bar, inset slightly
+        // so the dot's own radius never pokes outside the track's rounded ends.
+        const rawPct = (m.amt / GOAL) * 100;
+        const pct = Math.min(Math.max(rawPct, 1.5), 98.5);
+        const isBelow = i % 2 === 1;
+        const el = document.createElement('div');
+        el.className = 'marker' + (isBelow ? ' below' : ' above');
+        el.id = 'm' + i;
+        el.style.left = pct + '%';
+        el.innerHTML = `<div class="dot"></div><span class="label-text">$${m.amt.toLocaleString()}</span>`;
+        wrap.appendChild(el);
+      });
+    }
 
     function updateProgress() {
       const pct = Math.min((raised / GOAL) * 100, 100);
       document.getElementById('progress-fill').style.width = pct + '%';
       document.getElementById('raised-label').textContent = '$' + raised.toLocaleString();
       document.getElementById('pct-label').textContent =
-        ((raised / GOAL) * 100).toFixed(1) + '% of $5,000';
+        ((raised / GOAL) * 100).toFixed(1) + '% of $' + GOAL.toLocaleString();
 
       MILESTONES.forEach((m, i) => {
-        const el = document.getElementById('m' + (i + 1));
-        if (raised >= m) el.classList.add('reached');
-        else el.classList.remove('reached');
+        const marker = document.getElementById('m' + i);
+        const row = document.querySelector(`.goal-row[data-amt="${m.amt}"]`);
+        if (raised >= m.amt) {
+          marker.classList.add('reached');
+          row.classList.add('reached');
+        } else {
+          marker.classList.remove('reached');
+          row.classList.remove('reached');
+        }
       });
     }
 
@@ -529,16 +727,38 @@
       if (!open) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    function selectAmt(el, amt) {
+    function pickPerkFromTeaser(index) {
+      const panel = document.getElementById('donate-panel');
+      panel.style.display = 'block';
+      const options = document.querySelectorAll('.perk-option');
+      const target = options[index];
+      if (target) target.click();
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function selectPerk(el, amt, label) {
+      document.querySelectorAll('.perk-option').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       selectedAmt = amt;
+      selectedPerkLabel = label;
+      document.getElementById('custom-amt').value = '';
+    }
+
+    function selectAmt(el, amt) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.perk-option').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      selectedAmt = amt;
+      selectedPerkLabel = null;
       document.getElementById('custom-amt').value = '';
     }
 
     function clearChips() {
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.perk-option').forEach(p => p.classList.remove('active'));
       selectedAmt = 0;
+      selectedPerkLabel = null;
     }
 
     function recordDonation() {
@@ -560,7 +780,8 @@
       const lastRow = list.querySelector('.donor-row:last-child');
       const row = document.createElement('div');
       row.className = 'donor-row new';
-      row.innerHTML = `<span class="donor-name">${name}</span><span class="donor-amount">$${amt.toLocaleString()}</span>`;
+      const perkTag = selectedPerkLabel ? ` <span style="color:var(--text-muted); font-size:12px;">(${selectedPerkLabel})</span>` : '';
+      row.innerHTML = `<span class="donor-name">${name}${perkTag}</span><span class="donor-amount">$${amt.toLocaleString()}</span>`;
       list.insertBefore(row, lastRow);
 
       // Reset form
@@ -589,6 +810,7 @@
     }
 
     // Init
+    buildMarkers();
     updateProgress();
   </script>
 </body>
