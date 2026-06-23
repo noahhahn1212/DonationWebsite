@@ -1128,6 +1128,10 @@
       }
 
       const nameInput = document.getElementById('donor-name-input').value.trim();
+      if (!nameInput) {
+        const proceedAnonymously = confirm("You didn't enter a name — send this as an Anonymous donation?");
+        if (!proceedAnonymously) return;
+      }
       const name = nameInput || 'Anonymous';
       const perk = selectedPerkLabel;
 
