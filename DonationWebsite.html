@@ -266,6 +266,59 @@
       color: var(--success);
     }
 
+    /* gif preview (hover on desktop, tap on mobile) */
+    .goal-row.has-preview {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .goal-row .preview-hint {
+      font-size: 11px;
+      margin-left: 4px;
+      opacity: 0.7;
+    }
+
+    .goal-row .gif-popup {
+      display: none;
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translateX(-50%);
+      width: 160px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      z-index: 20;
+      background: #000;
+    }
+
+    .goal-row .gif-popup video {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Desktop: reveal on hover */
+    @media (hover: hover) {
+      .goal-row.has-preview:hover .gif-popup {
+        display: block;
+      }
+    }
+
+    /* Mobile / no-hover: revealed via .show class toggled by JS on tap */
+    .goal-row .gif-popup.show {
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .goal-row .gif-popup {
+        width: 130px;
+        left: 0;
+        transform: none;
+      }
+    }
+
     /* Progress bar */
     .progress-wrap {
       position: relative;
@@ -531,6 +584,64 @@
       .perk-card { align-items: flex-start; }
     }
 
+    /* Jacob warning overlay */
+    .warning-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0a0a0a;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .warning-overlay.hidden {
+      display: none;
+    }
+
+    .warning-box {
+      max-width: 480px;
+    }
+
+    .warning-icon {
+      font-size: 36px;
+      margin-bottom: 1rem;
+    }
+
+    .warning-title {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: #f0ede8;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .warning-sub {
+      margin-top: 1.25rem;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ff5c5c;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .warning-btn {
+      margin-top: 2rem;
+      padding: 12px 28px;
+      background: #f0ede8;
+      color: #0a0a0a;
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .warning-btn:hover { opacity: 0.85; }
+
     /* Admin */
     .admin-trigger-wrap {
       text-align: center;
@@ -680,6 +791,15 @@
   </style>
 </head>
 <body>
+  <div id="warning-overlay" class="warning-overlay">
+    <div class="warning-box">
+      <div class="warning-title">!!THIS WEBSITE IS STILL IN DEVELOPMENT!!</div>
+      <div class="warning-title">**DO NOT DONATE**</div>
+      <div class="warning-title">Jacob does not know anything. Please do not tell him about the trip or spoil any information on this website.</div>
+      <div class="warning-sub">If you are Jacob, don't peek.</div>
+      <button class="warning-btn" onclick="dismissWarning()">I understand, continue</button>
+    </div>
+  </div>
   <div class="page">
 
     <!-- Hero -->
@@ -749,7 +869,13 @@
         <div class="goal-row" data-amt="100"><span class="amount">$100</span><span class="label">Jacob's application to the Navy doesn't get submitted</span></div>
         <div class="goal-row" data-amt="250"><span class="amount">$250</span><span class="label">A video of us having fun</span></div>
         <div class="goal-row" data-amt="400"><span class="amount">$400</span><span class="label">Old-school campfire skit</span></div>
-        <div class="goal-row" data-amt="750"><span class="amount">$750</span><span class="label">Jockey jig at the horse track</span></div>
+        <div class="goal-row has-preview" data-amt="750" onclick="toggleGifPopup(event, this)">
+          <span class="amount">$750</span>
+          <span class="label">Jockey jig at the horse track <span class="preview-hint">(Hover over [or tap if on phone] to see example)</span></span>
+          <div class="gif-popup">
+            <video src="Jockey_Jig.mp4" autoplay loop muted playsinline></video>
+          </div>
+        </div>
         <div class="goal-row" data-amt="930"><span class="amount">$930</span><span class="label">Airbnb paid off</span></div>
         <div class="goal-row" data-amt="1500"><span class="amount">$1,500</span><span class="label">Cement Mixer — chug half a gallon of milk + 3 shots (top 3 donors each pick a participant)</span></div>
         <div class="goal-row" data-amt="2000"><span class="amount">$2,000</span><span class="label">We recreate the cheese sock video</span></div>
@@ -849,14 +975,13 @@
     // Google Apps Script Web App URL, this is the "API" that reads from and writes to the Google Sheet acting as the shared database.
     const API_URL = 'https://script.google.com/macros/s/AKfycbyTyJWY3roO5tz2aYD4_8xyDxvY1SjNfAR66O5Ru2lEM5dsK6gyMPbNLNaKiej6tX9M/exec';
 
-    // How often (in ms) the page quietly re-checks the Sheet for new donations from other visitors. 20s atm
+    // How often (in ms) the page re-checks the Sheet for new donations from other visitors. 20s
     const REFRESH_INTERVAL_MS = 20000;
 
-    // This is to edito donations, a basic deterrent only, not real security anyone who views the page source can find it
+    // This is a basic deterrent only, not real security anyone who views the page source can find it. Good enough to stop accidental edits.
     const ADMIN_PASSCODE = '123abc123';
 
-    // Every donation lives here. raised is always derived from this array, never incremented directly, so edits/deletes always stay in sync.
-    // This is now a local cache of whatever's in the Google Sheet fetchDonations() keeps it up to date.
+    // Every donation lives here. raised is always derived from this array. This is now a local cache of whatever's in the Google Sheet fetchDonations() keeps it up to date.
     let donations = [];
     let selectedAmt = 0;
     let selectedPerkLabel = null;
@@ -867,6 +992,7 @@
       return donations.reduce((sum, d) => sum + d.amt, 0);
     }
 
+  
     // Pulls the latest donation list from the Google Sheet and re-renders. Called on page load, on a timer, and right after a successful donation.
     async function fetchDonations() {
       // Don't refresh out from under an in-progress admin edit.
@@ -1016,7 +1142,7 @@
       try {
         await fetch(API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' }, // avoids a CORS preflight to Apps Script
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({ action: 'add', name, amt, perk })
         });
       } catch (err) {
@@ -1039,6 +1165,28 @@
       setTimeout(fetchDonations, 2000);
     }
 
+    function dismissWarning() {
+      document.getElementById('warning-overlay').classList.add('hidden');
+    }
+
+    function toggleGifPopup(e, row) {
+      const popup = row.querySelector('.gif-popup');
+      const isShowing = popup.classList.contains('show');
+      // Close any other open popups first
+      document.querySelectorAll('.gif-popup.show').forEach(p => p.classList.remove('show'));
+      if (!isShowing) {
+        popup.classList.add('show');
+        e.stopPropagation(); // don't let the document-level listener below instantly close it
+      }
+    }
+
+    // Tapping anywhere outside an open popup closes it.
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.goal-row.has-preview')) {
+        document.querySelectorAll('.gif-popup.show').forEach(p => p.classList.remove('show'));
+      }
+    });
+
     function shareIt() {
       const SITE_URL = 'https://noahhahn.com';
       navigator.clipboard.writeText(SITE_URL)
@@ -1052,6 +1200,7 @@
     }
 
     /* Admin */
+
     async function unlockAdmin() {
       if (adminUnlocked) {
         await fetchDonations(); // adminDraft is null right now, so this is allowed through
@@ -1075,7 +1224,7 @@
     }
 
     function lockAdmin() {
-      // Discard the draft — anything typed/deleted since opening is dropped.
+      // Discard the draft, anything typed/deleted since opening is dropped.
       adminDraft = null;
       document.getElementById('admin-panel').style.display = 'none';
     }

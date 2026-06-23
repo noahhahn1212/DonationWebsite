@@ -7,10 +7,10 @@ Individual Donation goals:
 2026 bachelor trip picture calendar
 Horse racing?
 
-Things to fix/update:
-Group Milestones:
-    - How am i going to add a gif for the Jockey Jig (maybe link? Maybe a hover over popup?)
-
 About the trip:
     - Complete the about the trip section
     - Maybe move it?
+
+Individual:
+    - Shark attack only putting $300 towards poker
+    - Whiskey saying a $75 bottle of Whiskey
