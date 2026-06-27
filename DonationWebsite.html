@@ -120,6 +120,43 @@
       margin-bottom: 12px;
     }
 
+    .donate-step {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .donate-step + .donate-step {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .step-num {
+      flex: 0 0 22px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--text-primary);
+      color: var(--bg);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-body {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
     .payment-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -805,7 +842,7 @@
     <!-- Hero -->
     <div class="hero">
       <h1>Jacobs Bachelor Trip Donations</h1>
-      <p>Help us make unforgettable memories.</p>
+      <p>Help us celibrate Jacob and Kendyll.</p>
       <div class="hero-btns">
         <button class="btn-primary" onclick="toggleDonate()">Donate</button>
         <button class="btn-secondary" onclick="shareIt()">Share</button>
@@ -814,58 +851,73 @@
 
     <!-- Donate panel -->
     <div id="donate-panel" class="donate-panel">
-      <h3>Choose how to send your donation</h3>
-      <div class="payment-grid">
-        <div class="payment-card">
-          <div class="method">Venmo</div>
-          <div class="handle">@Noah-Hahn-5</div>
-        </div>
-        <div class="payment-card">
-          <div class="method">Zelle</div>
-          <div class="handle">(979)587-0596</div>
-        </div>
-      </div>
-      <p class="hint">After sending, record your donation below to update the progress bar:</p>
+      <h3>Make a donation</h3>
 
-      <div class="perk-picker" id="perk-picker">
-        <div class="perk-option" onclick="selectPerk(this, 35, 'Kentucky postcard')">
-          <span class="perk-option-text">Get a Kentucky postcard for you</span>
-          <span class="perk-option-price">$35</span>
-        </div>
-        <div class="perk-option" onclick="selectPerk(this, 75, 'Personalized Kentucky shot glass')">
-          <span class="perk-option-text">Get your own hand picked personalized Kentucky shot glass</span>
-          <span class="perk-option-price">$75</span>
-        </div>
-        <div class="perk-option" onclick="selectPerk(this, 250, 'Bottle of Kentucky whiskey')">
-          <span class="perk-option-text">Bring you back a bottle of Kentucky whiskey from one of our distilary tours</span>
-          <span class="perk-option-price">$250</span>
-        </div>
-        <div class="perk-option" onclick="selectPerk(this, 500, 'Shark Attack')">
-          <span class="perk-option-text">Shark Attack - Buy Jacob in for a game of poker with a ton of sharks</span>
-          <span class="perk-option-price">$500</span>
+      <div class="donate-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Send your donation</p>
+          <div class="payment-grid">
+            <div class="payment-card">
+              <div class="method">Venmo</div>
+              <div class="handle">@Noah-Hahn-5</div>
+            </div>
+            <div class="payment-card">
+              <div class="method">Zelle</div>
+              <div class="handle">(979)587-0596</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="or-divider">or pick an amount</div>
+      <div class="donate-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Tell us what you sent</p>
+          <p class="hint">This updates the progress bar for the goals and adds your name to the contributors list so others can see how close we are to the goals.</p>
 
-      <div class="amount-chips">
-        <button class="chip" onclick="selectAmt(this, 10)">$10</button>
-        <button class="chip" onclick="selectAmt(this, 25)">$25</button>
-        <button class="chip" onclick="selectAmt(this, 50)">$50</button>
-        <button class="chip" onclick="selectAmt(this, 100)">$100</button>
-        <button class="chip" onclick="selectAmt(this, 200)">$200</button>
+          <p class="step-title">Individual perks:</p>
+          <div class="perk-picker" id="perk-picker">
+            <div class="perk-option" onclick="selectPerk(this, 35, 'Kentucky postcard')">
+              <span class="perk-option-text">Get a Kentucky postcard for you</span>
+              <span class="perk-option-price">$35</span>
+            </div>
+            <div class="perk-option" onclick="selectPerk(this, 75, 'Personalized Kentucky shot glass')">
+              <span class="perk-option-text">Get your own hand picked personalized Kentucky shot glass</span>
+              <span class="perk-option-price">$75</span>
+            </div>
+            <div class="perk-option" onclick="selectPerk(this, 250, 'Bottle of Kentucky whiskey')">
+              <span class="perk-option-text">Bring you back a bottle of Kentucky whiskey from one of our distilary tours</span>
+              <span class="perk-option-price">$250</span>
+            </div>
+            <div class="perk-option" onclick="selectPerk(this, 500, 'Shark Attack')">
+              <span class="perk-option-text">Shark Attack - Buy Jacob in for a game of poker with a ton of sharks</span>
+              <span class="perk-option-price">$500</span>
+            </div>
+          </div>
+
+          <div class="or-divider">or pick an amount</div>
+
+          <div class="amount-chips">
+            <button class="chip" onclick="selectAmt(this, 10)">$10</button>
+            <button class="chip" onclick="selectAmt(this, 25)">$25</button>
+            <button class="chip" onclick="selectAmt(this, 50)">$50</button>
+            <button class="chip" onclick="selectAmt(this, 100)">$100</button>
+            <button class="chip" onclick="selectAmt(this, 200)">$200</button>
+          </div>
+          <input class="field" type="number" id="custom-amt" placeholder="Or enter custom amount…" min="1" oninput="clearChips()" />
+          <input class="field" type="text" id="donor-name-input" placeholder="Your name (e.g. Alex M.)" />
+          <button class="record-btn" onclick="recordDonation()">Record my donation</button>
+          <div id="success-msg" class="success-msg">✓ Donation recorded — thank you!</div>
+        </div>
       </div>
-      <input class="field" type="number" id="custom-amt" placeholder="Or enter custom amount…" min="1" oninput="clearChips()" />
-      <input class="field" type="text" id="donor-name-input" placeholder="Your name (e.g. Alex M.)" />
-      <button class="record-btn" onclick="recordDonation()">Record my donation</button>
-      <div id="success-msg" class="success-msg">✓ Donation recorded — thank you!</div>
     </div>
 
     <!-- Goals & progress -->
     <div class="goals-section">
       <div class="section-title">Group milestones</div>
       <div class="goals-list">
-        <div class="goal-row" data-amt="50"><span class="amount">$50</span><span class="label">Group pictures sent to mom</span></div>
+        <div class="goal-row" data-amt="50"><span class="amount">$50</span><span class="label">Group pictures sent to moms</span></div>
         <div class="goal-row" data-amt="100"><span class="amount">$100</span><span class="label">Jacob's application to the Navy doesn't get submitted</span></div>
         <div class="goal-row" data-amt="250"><span class="amount">$250</span><span class="label">A video of us having fun</span></div>
         <div class="goal-row" data-amt="400"><span class="amount">$400</span><span class="label">Old-school campfire skit</span></div>
