@@ -76,6 +76,19 @@
       margin-top: 1.25rem;
     }
 
+    .contact-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    .contact-note a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .btn-primary {
       background: var(--text-primary);
       color: var(--bg);
@@ -487,11 +500,25 @@
 
     .donor-row {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       padding: 13px 0;
       border-bottom: 0.5px solid var(--border);
       font-size: 14px;
+    }
+
+    .donor-row-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .donor-comment {
+      margin-top: 4px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 1.4;
+      word-break: break-word;
     }
 
     .donor-row:last-child { border-bottom: none; }
@@ -521,6 +548,13 @@
     }
 
     .perks-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .milestones-sub {
       font-size: 13px;
       color: var(--text-secondary);
       margin-bottom: 16px;
@@ -679,6 +713,98 @@
     }
     .warning-btn:hover { opacity: 0.85; }
 
+    /* Trip gallery */
+    .gallery {
+      padding: 2rem 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .gallery-viewport {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gallery-frame {
+      flex: 1 1 auto;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-strong);
+      background: var(--bg-secondary);
+    }
+
+    .gallery-track {
+      display: flex;
+      transition: transform 0.35s ease;
+    }
+
+    .gallery-slide {
+      flex: 0 0 100%;
+      aspect-ratio: 4 / 3;
+      position: relative;
+    }
+
+    .gallery-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-fallback {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .gallery-arrow {
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 0.5px solid var(--border-strong);
+      background: var(--bg);
+      color: var(--text-primary);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+    }
+    .gallery-arrow:hover { background: var(--bg-secondary); }
+
+    .gallery-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .gallery-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border-strong);
+      cursor: pointer;
+      border: none;
+      padding: 0;
+    }
+    .gallery-dot.active { background: var(--text-primary); }
+
+    @media (max-width: 480px) {
+      .gallery-arrow { width: 28px; height: 28px; font-size: 14px; }
+    }
+
     /* Admin */
     .admin-trigger-wrap {
       text-align: center;
@@ -721,12 +847,18 @@
 
     .admin-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      gap: 6px;
       padding: 8px 0;
       border-bottom: 0.5px solid var(--border);
     }
     .admin-row:last-child { border-bottom: none; }
+
+    .admin-row-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
     .admin-row .admin-name {
       flex: 1 1 auto;
@@ -762,6 +894,18 @@
       font-family: inherit;
     }
     .admin-row .admin-del:hover { background: var(--bg); color: #d33; border-color: #d33; }
+
+    .admin-row .admin-comment {
+      width: 100%;
+      font-size: 12.5px;
+      background: var(--bg);
+      border: 0.5px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 6px 8px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-style: italic;
+    }
 
     .admin-add-row {
       display: flex;
@@ -842,11 +986,20 @@
     <!-- Hero -->
     <div class="hero">
       <h1>Jacobs Bachelor Trip Donations</h1>
-      <p>Help us celibrate Jacob and Kendyll.</p>
+      <p>Help us give Jacob a great trip! (Aug. 20-23) </p>
       <div class="hero-btns">
         <button class="btn-primary" onclick="toggleDonate()">Donate</button>
         <button class="btn-secondary" onclick="shareIt()">Share</button>
       </div>
+      <p class="contact-note">Something not working? Text Noah at (979) 587-0596</p>
+    </div>
+
+    <!-- About -->
+    <div class="about">
+      <div class="section-title">About the trip</div>
+      <p>The mission is simple: give Jacob the bachelor weekend he deserves.</p>
+      <p>We'll be flying into Cincinnati and kicking off the trip with a visit to the casino and horse racing track before heading into Kentucky for a lakeside cabin getaway. The weekend will be packed with outdoor adventures, fishing, hiking, and visits to local distilleries for whiskey tastings.</p>
+      <p>Thanks for helping us send him off in style!</p>
     </div>
 
     <!-- Donate panel -->
@@ -878,21 +1031,21 @@
 
           <p class="step-title">Individual perks:</p>
           <div class="perk-picker" id="perk-picker">
-            <div class="perk-option" onclick="selectPerk(this, 35, 'Kentucky postcard')">
+            <div class="perk-option" onclick="selectPerk(this, 35, 'Kentucky Postcard')">
               <span class="perk-option-text">Get a Kentucky postcard for you</span>
               <span class="perk-option-price">$35</span>
             </div>
-            <div class="perk-option" onclick="selectPerk(this, 75, 'Personalized Kentucky shot glass')">
-              <span class="perk-option-text">Get your own hand picked personalized Kentucky shot glass</span>
-              <span class="perk-option-price">$75</span>
+            <div class="perk-option" onclick="selectPerk(this, 200, 'Personalized Thank You Video')">
+              <span class="perk-option-text">Thank you video from all of us</span>
+              <span class="perk-option-price">$200</span>
+            </div>            
+            <div class="perk-option" onclick="selectPerk(this, 350, 'Bottle of Kentucky whiskey')">
+              <span class="perk-option-text">Bring you back a bottle of Kentucky whiskey from one of our distilary tours (Minimum $75 bottle)</span>
+              <span class="perk-option-price">$350</span>
             </div>
-            <div class="perk-option" onclick="selectPerk(this, 250, 'Bottle of Kentucky whiskey')">
-              <span class="perk-option-text">Bring you back a bottle of Kentucky whiskey from one of our distilary tours</span>
-              <span class="perk-option-price">$250</span>
-            </div>
-            <div class="perk-option" onclick="selectPerk(this, 500, 'Shark Attack')">
-              <span class="perk-option-text">Shark Attack - Buy Jacob in for a game of poker with a ton of sharks</span>
-              <span class="perk-option-price">$500</span>
+            <div class="perk-option" onclick="selectPerk(this, 600, 'Shark Attack')">
+              <span class="perk-option-text">Shark Attack - Buy in ($300) Jacob in for a game of poker with a ton of sharks</span>
+              <span class="perk-option-price">$600</span>
             </div>
           </div>
 
@@ -907,6 +1060,7 @@
           </div>
           <input class="field" type="number" id="custom-amt" placeholder="Or enter custom amount…" min="1" oninput="clearChips()" />
           <input class="field" type="text" id="donor-name-input" placeholder="Your name (e.g. Alex M.)" />
+          <input class="field" type="text" id="donor-comment-input" placeholder="Leave a comment (optional)" maxlength="200" />
           <button class="record-btn" onclick="recordDonation()">Record my donation</button>
           <div id="success-msg" class="success-msg">✓ Donation recorded — thank you!</div>
         </div>
@@ -916,8 +1070,9 @@
     <!-- Goals & progress -->
     <div class="goals-section">
       <div class="section-title">Group milestones</div>
+      <p class="milestones-sub">Some of these are just financial targets, others are things we'll actually do once we hit that amount.</p>
       <div class="goals-list">
-        <div class="goal-row" data-amt="50"><span class="amount">$50</span><span class="label">Group pictures sent to moms</span></div>
+        <div class="goal-row" data-amt="50"><span class="amount">$50</span><span class="label">Group pictures sent to parents</span></div>
         <div class="goal-row" data-amt="100"><span class="amount">$100</span><span class="label">Jacob's application to the Navy doesn't get submitted</span></div>
         <div class="goal-row" data-amt="250"><span class="amount">$250</span><span class="label">A video of us having fun</span></div>
         <div class="goal-row" data-amt="400"><span class="amount">$400</span><span class="label">Old-school campfire skit</span></div>
@@ -961,24 +1116,52 @@
           <span class="perk-price">$35</span>
         </div>
         <div class="perk-card" onclick="pickPerkFromTeaser(1)">
-          <span class="perk-text">Get your own hand picked personalized Kentucky shot glass</span>
-          <span class="perk-price">$75</span>
-        </div>        
+          <span class="perk-text">Thank you video from all of us</span>
+          <span class="perk-price">$200</span>
+        </div>     
         <div class="perk-card" onclick="pickPerkFromTeaser(2)">
-          <span class="perk-text">Bring you back a bottle of Kentucky whiskey from one of our distilary tours</span>
-          <span class="perk-price">$250</span>
+          <span class="perk-text">Bring you back a bottle of Kentucky whiskey from one of our distilary tours (Minimum $75 bottle) </span>
+          <span class="perk-price">$350</span>
         </div>
         <div class="perk-card" onclick="pickPerkFromTeaser(3)">
-          <span class="perk-text">Shark Attack - Buy Jacob in for a game of poker with a ton of sharks</span>
-          <span class="perk-price">$500</span>
+          <span class="perk-text">Shark Attack - Buy in ($300) Jacob in for a game of poker with a ton of sharks </span>
+          <span class="perk-price">$600</span>
         </div>
       </div>
     </div>
 
-    <!-- About -->
-    <div class="about">
-      <div class="section-title">About the trip</div>
-      <p>We're taking Jacob to Kentucky for a whiskey filled cabin stay with a lake view</p>
+    <!-- Trip gallery -->
+    <div class="gallery">
+      <div class="section-title">Trip gallery</div>
+      <div class="gallery-viewport">
+        <button class="gallery-arrow" onclick="galleryNav(-1)" aria-label="Previous photo">‹</button>
+        <div class="gallery-frame">
+          <div class="gallery-track" id="gallery-track">
+            <div class="gallery-slide">
+              <img src="Pic1.jpeg" alt="Trip photo 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>📷</span><span>Add gallery-1.jpg</span></div>
+            </div>
+            <div class="gallery-slide">
+              <img src="Pic2.jpeg" alt="Trip photo 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>📷</span><span>Add gallery-2.jpg</span></div>
+            </div>
+            <div class="gallery-slide">
+              <img src="Pic3.jpeg" alt="Trip photo 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>📷</span><span>Add gallery-3.jpg</span></div>
+            </div>
+            <div class="gallery-slide">
+              <img src="Pic4.jpeg" alt="Trip photo 4" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>📷</span><span>Add gallery-4.jpg</span></div>
+            </div>
+            <div class="gallery-slide">
+              <img src="Pic5.jpeg" alt="Trip photo 5" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>📷</span><span>Add gallery-5.jpg</span></div>
+            </div>
+          </div>
+        </div>
+        <button class="gallery-arrow" onclick="galleryNav(1)" aria-label="Next photo">›</button>
+      </div>
+      <div class="gallery-dots" id="gallery-dots"></div>
     </div>
 
     <!-- Donors -->
@@ -1044,6 +1227,12 @@
       return donations.reduce((sum, d) => sum + d.amt, 0);
     }
 
+    // Comments are free text from anyone, so escape before inserting as HTML to avoid a stray "<" or "&" breaking the page (or worse).
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
   
     // Pulls the latest donation list from the Google Sheet and re-renders. Called on page load, on a timer, and right after a successful donation.
     async function fetchDonations() {
@@ -1056,6 +1245,7 @@
           name: d.name,
           amt: d.amt,
           perk: d.perk || null,
+          comment: d.comment || null,
           timestamp: d.timestamp || null
         }));
         // Most recent donation first.
@@ -1115,12 +1305,13 @@
         const row = document.createElement('div');
         row.className = 'donor-row';
         const perkTag = d.perk ? ` <span style="color:var(--text-muted); font-size:12px;">(${d.perk})</span>` : '';
-        row.innerHTML = `<span class="donor-name">${d.name}${perkTag}</span><span class="donor-amount">$${d.amt.toLocaleString()}</span>`;
+        const commentLine = d.comment ? `<div class="donor-comment">"${escapeHtml(d.comment)}"</div>` : '';
+        row.innerHTML = `<div class="donor-row-main"><span class="donor-name">${d.name}${perkTag}</span><span class="donor-amount">$${d.amt.toLocaleString()}</span></div>${commentLine}`;
         list.appendChild(row);
       });
       const youRow = document.createElement('div');
       youRow.className = 'donor-row';
-      youRow.innerHTML = `<span class="donor-name" style="color: var(--text-muted); font-weight: 400;">You?</span><span class="contribute-link" onclick="toggleDonate()">Contribute!</span>`;
+      youRow.innerHTML = `<div class="donor-row-main"><span class="donor-name" style="color: var(--text-muted); font-weight: 400;">You?</span><span class="contribute-link" onclick="toggleDonate()">Contribute!</span></div>`;
       list.appendChild(youRow);
     }
 
@@ -1186,20 +1377,21 @@
       }
       const name = nameInput || 'Anonymous';
       const perk = selectedPerkLabel;
+      const comment = document.getElementById('donor-comment-input').value.trim().slice(0, 200) || null;
 
       const recordBtn = document.querySelector('.record-btn');
       recordBtn.disabled = true;
       recordBtn.textContent = 'Recording…';
 
       // Optimistic update: show it locally right away so the donor gets instant feedback, rather than waiting on the round trip to Google.
-      donations.unshift({ name, amt, perk, timestamp: new Date().toISOString() });
+      donations.unshift({ name, amt, perk, comment, timestamp: new Date().toISOString() });
       renderAll();
 
       try {
         await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({ action: 'add', name, amt, perk })
+          body: JSON.stringify({ action: 'add', name, amt, perk, comment })
         });
       } catch (err) {
         console.error('Failed to save donation to the Sheet:', err);
@@ -1208,6 +1400,7 @@
       // Reset form
       document.getElementById('custom-amt').value = '';
       document.getElementById('donor-name-input').value = '';
+      document.getElementById('donor-comment-input').value = '';
       clearChips();
       recordBtn.disabled = false;
       recordBtn.textContent = 'Record my donation';
@@ -1223,6 +1416,40 @@
 
     function dismissWarning() {
       document.getElementById('warning-overlay').classList.add('hidden');
+    }
+
+    /* Trip gallery */
+    let galleryIndex = 0;
+    const galleryTotal = document.querySelectorAll('.gallery-slide').length;
+
+    function buildGalleryDots() {
+      const dotsWrap = document.getElementById('gallery-dots');
+      dotsWrap.innerHTML = '';
+      for (let i = 0; i < galleryTotal; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'gallery-dot' + (i === galleryIndex ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to photo ' + (i + 1));
+        dot.onclick = () => goToGallerySlide(i);
+        dotsWrap.appendChild(dot);
+      }
+    }
+
+    function updateGallery() {
+      const track = document.getElementById('gallery-track');
+      track.style.transform = `translateX(-${galleryIndex * 100}%)`;
+      document.querySelectorAll('.gallery-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === galleryIndex);
+      });
+    }
+
+    function galleryNav(direction) {
+      galleryIndex = (galleryIndex + direction + galleryTotal) % galleryTotal;
+      updateGallery();
+    }
+
+    function goToGallerySlide(i) {
+      galleryIndex = i;
+      updateGallery();
     }
 
     function toggleGifPopup(e, row) {
@@ -1256,7 +1483,6 @@
     }
 
     /* Admin */
-
     async function unlockAdmin() {
       if (adminUnlocked) {
         await fetchDonations(); // adminDraft is null right now, so this is allowed through
@@ -1292,9 +1518,12 @@
         const row = document.createElement('div');
         row.className = 'admin-row';
         row.innerHTML = `
-          <input class="admin-name" value="${d.name.replace(/"/g, '&quot;')}" oninput="adminDraft[${i}].name = this.value" />
-          <input class="admin-amt" type="number" value="${d.amt}" oninput="adminEditAmt(${i}, this.value)" />
-          <button class="admin-del" onclick="adminDeleteRow(${i})">Delete</button>
+          <div class="admin-row-main">
+            <input class="admin-name" value="${d.name.replace(/"/g, '&quot;')}" oninput="adminDraft[${i}].name = this.value" />
+            <input class="admin-amt" type="number" value="${d.amt}" oninput="adminEditAmt(${i}, this.value)" />
+            <button class="admin-del" onclick="adminDeleteRow(${i})">Delete</button>
+          </div>
+          <input class="admin-comment" type="text" placeholder="Comment (optional)" maxlength="200" value="${(d.comment || '').replace(/"/g, '&quot;')}" oninput="adminDraft[${i}].comment = this.value.trim() || null" />
         `;
         wrap.appendChild(row);
       });
@@ -1324,7 +1553,7 @@
         alert('Enter a valid amount.');
         return;
       }
-      adminDraft.push({ name, amt, perk: null });
+      adminDraft.push({ name, amt, perk: null, comment: null });
       nameEl.value = '';
       amtEl.value = '';
       renderAdminRows();
@@ -1361,6 +1590,7 @@
 
     // Init
     buildMarkers();
+    buildGalleryDots();
     fetchDonations();
     setInterval(fetchDonations, REFRESH_INTERVAL_MS);
   </script>
