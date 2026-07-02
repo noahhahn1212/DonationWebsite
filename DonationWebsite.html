@@ -6,7 +6,8 @@
   <title>Jacobs Bachelor Trip Donations</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" /></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
  
@@ -998,7 +999,7 @@
     <div class="about">
       <div class="section-title">About the trip</div>
       <p>The mission is simple: give Jacob the bachelor weekend he deserves.</p>
-      <p>We'll be flying into Cincinnati and kicking off the trip with a visit to the casino and horse racing track before heading into Kentucky for a lakeside cabin getaway. The weekend will be packed with outdoor adventures, fishing, hiking, and visits to local distilleries for whiskey tastings.</p>
+      <p>We'll be flying into Cincinnati and kicking off the trip with a visit to the casino and horse racing track before heading into Kentucky for a lakeside cabin getaway. The weekend will be packed with outdoor adventures, hiking, and visits to local distilleries for whiskey tastings.</p>
       <p>Thanks for helping us send him off in style!</p>
     </div>
 
@@ -1080,14 +1081,14 @@
           <span class="amount">$750</span>
           <span class="label">Jockey jig at the horse track <span class="preview-hint">(Hover over [or tap if on phone] to see example)</span></span>
           <div class="gif-popup">
-            <video src="Jockey_Jig.mp4" autoplay loop muted playsinline></video>
+            <video src="Jockey_Jig.mp4" autoplay loop muted playsinline preload="none"></video>
           </div>
         </div>
         <div class="goal-row" data-amt="930"><span class="amount">$930</span><span class="label">Airbnb paid off</span></div>
-        <div class="goal-row" data-amt="1500"><span class="amount">$1,500</span><span class="label">Cement Mixer — chug half a gallon of milk + 3 shots (top 3 donors each pick a participant)</span></div>
+        <div class="goal-row" data-amt="1500"><span class="amount">$1,500</span><span class="label">Cement Mixer - chug half a gallon of milk + 3 shots (top 3 donors each pick a participant)</span></div>
         <div class="goal-row" data-amt="2000"><span class="amount">$2,000</span><span class="label">We recreate the cheese sock video</span></div>
-        <div class="goal-row" data-amt="3000"><span class="amount">$3,000</span><span class="label">A random groomsman becomes Lady Luck — wears a dress at the casino (flights paid for)</span></div>
-        <div class="goal-row" data-amt="4000"><span class="amount">$4,000</span><span class="label">Someone hits an open mic comedy show — Airbnb &amp; flights paid for</span></div>
+        <div class="goal-row" data-amt="3000"><span class="amount">$3,000</span><span class="label">A random groomsman becomes Lady Luck - wears a dress at the casino (flights paid for)</span></div>
+        <div class="goal-row" data-amt="4000"><span class="amount">$4,000</span><span class="label">Someone hits an open mic comedy show (Airbnb &amp; flights paid for)</span></div>
       </div>
 
       <div class="progress-wrap">
@@ -1132,30 +1133,30 @@
 
     <!-- Trip gallery -->
     <div class="gallery">
-      <div class="section-title">Trip gallery</div>
+      <div class="section-title"> Enjoy some pictures of us </div>
       <div class="gallery-viewport">
         <button class="gallery-arrow" onclick="galleryNav(-1)" aria-label="Previous photo">‹</button>
         <div class="gallery-frame">
           <div class="gallery-track" id="gallery-track">
             <div class="gallery-slide">
-              <img src="Pic1.jpeg" alt="Trip photo 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="gallery-fallback"><span>📷</span><span>Add gallery-1.jpg</span></div>
+              <img src="Pic3.jpg" alt="Trip photo 1" fetchpriority="high" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>Add gallery-1.jpg</span></div>
             </div>
             <div class="gallery-slide">
-              <img src="Pic2.jpeg" alt="Trip photo 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="gallery-fallback"><span>📷</span><span>Add gallery-2.jpg</span></div>
+              <img src="Pic2.jpg" alt="Trip photo 2" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>Add gallery-2.jpg</span></div>
             </div>
             <div class="gallery-slide">
-              <img src="Pic3.jpeg" alt="Trip photo 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="gallery-fallback"><span>📷</span><span>Add gallery-3.jpg</span></div>
+              <img src="Pic4.jpg" alt="Trip photo 3" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>Add gallery-3.jpg</span></div>
             </div>
             <div class="gallery-slide">
-              <img src="Pic4.jpeg" alt="Trip photo 4" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="gallery-fallback"><span>📷</span><span>Add gallery-4.jpg</span></div>
+              <img src="Pic5.jpg" alt="Trip photo 4" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>Add gallery-4.jpg</span></div>
             </div>
             <div class="gallery-slide">
-              <img src="Pic5.jpeg" alt="Trip photo 5" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-              <div class="gallery-fallback"><span>📷</span><span>Add gallery-5.jpg</span></div>
+              <img src="Pic1.jpg" alt="Trip photo 5" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <div class="gallery-fallback"><span>Add gallery-5.jpg</span></div>
             </div>
           </div>
         </div>
@@ -1233,6 +1234,7 @@
       div.textContent = str;
       return div.innerHTML;
     }
+
   
     // Pulls the latest donation list from the Google Sheet and re-renders. Called on page load, on a timer, and right after a successful donation.
     async function fetchDonations() {
